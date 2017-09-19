@@ -54,4 +54,6 @@ def load(context, url, callback):
         result = LoaderResult()
         result.successful = False
         result.error = LoaderResult.ERROR_NOT_FOUND
-        callback(result)
+        # callback(result)
+        # TEMP enable file loader
+        FileLoader.load(context, url, callback)

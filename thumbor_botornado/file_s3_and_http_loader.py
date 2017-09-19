@@ -28,11 +28,10 @@ def load(context, url, callback):
                           callback)
 
     # If melody s3 file, first try to load from efs
-    #if match:
-    logger.warn('melody s3 file, first try to load from efs: ' + match.group('path'))
-    # FileLoader.load(context, match.group('path'), callback_wrapper)
-    FileLoader.load(context, url, callback_wrapper)
+    if match:
+        logger.warn('melody s3 file, first try to load from efs: ' + match.group('path'))
+        FileLoader.load(context, match.group('path'), callback_wrapper)
     # else get from the internet
-    #else:
-    #    logger.warn('http:' + url)
-    #    HttpLoader.load(context, url, callback)
+    else:
+        logger.warn('http:' + url)
+        HttpLoader.load(context, url, callback)

@@ -1,10 +1,14 @@
 import os
+import re
+
 from tornado.concurrent import return_future
+
 from thumbor.utils import logger
+
 import thumbor_botornado.s3_loader as S3Loader
 import thumbor.loaders.http_loader as HttpLoader
 import thumbor.loaders.file_loader as FileLoader
-import re
+from thumbor.loaders.http_loader import quote_url
 
 HTTP_RE = re.compile(r'\Ahttps?:', re.IGNORECASE)
 S3_RE = re.compile(r'\Ahttps?://(?P<bucket>.*-melody).s3.amazonaws.com/(?P<path>.*)', re.IGNORECASE)
@@ -12,6 +16,7 @@ S3_RE = re.compile(r'\Ahttps?://(?P<bucket>.*-melody).s3.amazonaws.com/(?P<path>
 
 @return_future
 def load(context, url, callback):
+    url = quote_url(url)
     match = S3_RE.match(url)
 
     def callback_wrapper(result):

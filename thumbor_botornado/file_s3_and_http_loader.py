@@ -50,7 +50,7 @@ def load(context, url, callback):
         logger.info('web {0}'.format(url))
         HttpLoader.load(context, url, callback)
     else:
-        logger.info('not a url')
+        logger.info('not a url {0}'.format(url))
         result = LoaderResult()
         result.successful = False
         result.error = LoaderResult.ERROR_NOT_FOUND

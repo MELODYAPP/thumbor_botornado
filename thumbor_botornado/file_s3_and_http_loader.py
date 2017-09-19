@@ -37,7 +37,14 @@ def load(context, url, callback):
     # If melody s3 file, first try to load from efs
     if match:
         logger.debug('efs {0}'.format(match.group('path')))
-        FileLoader.load(context, match.group('path'), callback_wrapper)
+
+        # TEMP try s3 direct
+        S3Loader.load(context,
+                      os.path.join(match.group('bucket').rstrip('/'),
+                                   match.group('path').lstrip('/')),
+                      callback)
+
+        # FileLoader.load(context, match.group('path'), callback_wrapper)
     # else get from the internet
     elif HTTP_RE.match(url):
         logger.debug('web {0}'.format(url))

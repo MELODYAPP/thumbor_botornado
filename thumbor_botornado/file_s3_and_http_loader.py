@@ -24,7 +24,7 @@ def load(context, url, callback):
         if result.successful:
             callback(result)
         else:
-            logger.debug('s3 {0}'.format(
+            logger.info('s3 {0}'.format(
                 os.path.join(match.group('bucket').rstrip('/'), match.group('path').lstrip('/')))
             )
 
@@ -36,7 +36,7 @@ def load(context, url, callback):
 
     # If melody s3 file, first try to load from efs
     if match:
-        logger.debug('efs {0}'.format(match.group('path')))
+        logger.info('efs {0}'.format(match.group('path')))
 
         # TEMP try s3 direct
         S3Loader.load(context,
@@ -47,10 +47,10 @@ def load(context, url, callback):
         # FileLoader.load(context, match.group('path'), callback_wrapper)
     # else get from the internet
     elif HTTP_RE.match(url):
-        logger.debug('web {0}'.format(url))
+        logger.info('web {0}'.format(url))
         HttpLoader.load(context, url, callback)
     else:
-        logger.debug('not a url')
+        logger.info('not a url')
         result = LoaderResult()
         result.successful = False
         result.error = LoaderResult.ERROR_NOT_FOUND

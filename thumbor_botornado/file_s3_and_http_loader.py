@@ -20,6 +20,11 @@ def load(context, url, callback):
             logger.warn('efs success: ' + url)
             callback(result)
         else:
+            if match:
+                logger.warn('match inner')
+            else:
+                logger.warn('no match inner')
+
             logger.warn('efs failed, try s3 with: ' + os.path.join(match.group('bucket').rstrip('/'), match.group('path').lstrip('/')))
 
             # If not on efs, try s3
@@ -29,7 +34,11 @@ def load(context, url, callback):
                           callback)
 
     # If melody s3 file, first try to load from efs
-    #if match:
+    if match:
+        logger.warn('match')
+    else:
+        logger.warn('no match')
+
     # logger.warn('melody s3 file, first try to load from efs: ' + match.group('path'))
     # FileLoader.load(context, match.group('path'), callback_wrapper)
     logger.warn('first try to load from efs: ' + url)

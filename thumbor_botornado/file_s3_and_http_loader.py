@@ -6,7 +6,7 @@ import thumbor.loaders.file_loader
 import re
 
 HTTP_RE = re.compile(r'\Ahttps?:', re.IGNORECASE)
-S3_RE = re.compile(r'\Ahttps?://(?P<bucket>.*).s3.amazonaws.com/(?P<path>.*)', re.IGNORECASE)
+S3_RE = re.compile(r'\Ahttps?://(?P<bucket>.*-melody).s3.amazonaws.com/(?P<path>.*)', re.IGNORECASE)
 
 
 @return_future
@@ -26,5 +26,5 @@ def load(context, url, callback):
     if match:
         file_loader.load(context, match.group('path'), callback_wrapper)
     # else get from the internet
-    elif:
+    else:
         http_loader.load(context, url, callback)

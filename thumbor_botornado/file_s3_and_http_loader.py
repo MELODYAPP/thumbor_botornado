@@ -1,5 +1,6 @@
 import os
 from tornado.concurrent import return_future
+from thumbor.utils import logger
 import thumbor_botornado.s3_loader as S3Loader
 import thumbor.loaders.http_loader as HttpLoader
 import thumbor.loaders.file_loader as FileLoader
@@ -15,16 +16,22 @@ def load(context, url, callback):
 
     def callback_wrapper(result):
         if result.successful:
+            logger.info('efs success: ' + match.group('path'))
             callback(result)
         else:
+            logger.warn('efs failed: ' + os.path.join(match.group('bucket').rstrip('/'), match.group('path').lstrip('/')))
+
             # If not on efs, try s3
             S3Loader.load(context,
-                          os.path.join(match.group('bucket'), match.group('path')),
+                          os.path.join(match.group('bucket').rstrip('/'),
+                                       match.group('path').lstrip('/')),
                           callback)
 
     # If melody s3 file, first try to load from efs
     if match:
+        logger.info('melody s3 file, first try to load from efs: ' + match.group('path'))
         FileLoader.load(context, match.group('path'), callback_wrapper)
     # else get from the internet
     else:
+        logger.info('http:' + url)
         HttpLoader.load(context, url, callback)

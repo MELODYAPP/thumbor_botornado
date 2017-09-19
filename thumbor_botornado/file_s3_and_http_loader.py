@@ -22,11 +22,11 @@ def load(context, url, callback):
 
     def callback_wrapper(result):
         if result.successful:
-            # logger.warn('efs success: ' + match.group('path'))
-            logger.warn('efs success: ' + url)
             callback(result)
         else:
-            logger.warn('efs failed, try s3 with: ' + os.path.join(match.group('bucket').rstrip('/'), match.group('path').lstrip('/')))
+            logger.debug('s3 {0}'.format(
+                os.path.join(match.group('bucket').rstrip('/'), match.group('path').lstrip('/')))
+            )
 
             # If not on efs, try s3
             S3Loader.load(context,
@@ -36,16 +36,14 @@ def load(context, url, callback):
 
     # If melody s3 file, first try to load from efs
     if match:
-        logger.warn('melody s3 file, first try to load from efs: ' + match.group('path'))
+        logger.debug('efs {0}'.format(match.group('path')))
         FileLoader.load(context, match.group('path'), callback_wrapper)
-        # logger.warn('first try to load from efs: ' + url)
-        # FileLoader.load(context, url, callback_wrapper)
     # else get from the internet
     elif HTTP_RE.match(url):
-        logger.warn('regular web url:' + url)
+        logger.debug('web {0}'.format(url))
         HttpLoader.load(context, url, callback)
     else:
-        logger.warn('not a url')
+        logger.debug('not a url')
         result = LoaderResult()
         result.successful = False
         result.error = LoaderResult.ERROR_NOT_FOUND

@@ -16,7 +16,8 @@ def load(context, url, callback):
 
     def callback_wrapper(result):
         if result.successful:
-            logger.warn('efs success: ' + match.group('path'))
+            # logger.warn('efs success: ' + match.group('path'))
+            logger.warn('efs success: ' + url)
             callback(result)
         else:
             logger.warn('efs failed, try s3 with: ' + os.path.join(match.group('bucket').rstrip('/'), match.group('path').lstrip('/')))

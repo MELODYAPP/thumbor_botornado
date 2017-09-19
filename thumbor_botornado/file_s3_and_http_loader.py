@@ -16,7 +16,7 @@ def load(context, url, callback):
 
     def callback_wrapper(result):
         if result.successful:
-            logger.info('efs success: ' + match.group('path'))
+            logger.warn('efs success: ' + match.group('path'))
             callback(result)
         else:
             logger.warn('efs failed: ' + os.path.join(match.group('bucket').rstrip('/'), match.group('path').lstrip('/')))
@@ -29,9 +29,9 @@ def load(context, url, callback):
 
     # If melody s3 file, first try to load from efs
     if match:
-        logger.info('melody s3 file, first try to load from efs: ' + match.group('path'))
+        logger.warn('melody s3 file, first try to load from efs: ' + match.group('path'))
         FileLoader.load(context, match.group('path'), callback_wrapper)
     # else get from the internet
     else:
-        logger.info('http:' + url)
+        logger.warn('http:' + url)
         HttpLoader.load(context, url, callback)
